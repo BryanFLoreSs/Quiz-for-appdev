@@ -33,4 +33,5 @@ export interface QuizProgress {
   attempts: Record<number, QuestionAttempt>;
   bookmarks: number[];
   currentQuestionId: number;
+  optionOrder?: Record<number, string[]>;
 }

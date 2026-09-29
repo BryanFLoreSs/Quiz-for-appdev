@@ -41,6 +41,7 @@ export function useQuizState() {
           attempts: parsed.attempts || {},
           bookmarks: Array.isArray(parsed.bookmarks) ? parsed.bookmarks : [],
           currentQuestionId: typeof parsed.currentQuestionId === 'number' ? parsed.currentQuestionId : 1,
+          optionOrder: parsed.optionOrder && typeof parsed.optionOrder === 'object' ? parsed.optionOrder : {},
         };
       }
     } catch {
@@ -64,8 +65,44 @@ export function useQuizState() {
 
   const currentQuestion = useMemo(() => {
     const q = ALL_QUESTIONS.find((item) => item.id === progress.currentQuestionId);
-    return q || ALL_QUESTIONS[0];
-  }, [progress.currentQuestionId]);
+    const question = q || ALL_QUESTIONS[0];
+    const order = progress.optionOrder?.[question.id];
+    if (!question.options || !order) return question;
+
+    const optionsById = new Map(question.options.map((option) => [option.id, option]));
+    const shuffledChoices = order.map((id) => optionsById.get(id));
+    if (shuffledChoices.length !== question.options.length || shuffledChoices.some((choice) => !choice)) {
+      return question;
+    }
+
+    // Keep each displayed letter in its original position and move only the choice text.
+    const sourceToDisplayedId = new Map<string, string>();
+    const options = question.options.map((slot, index) => {
+      const shuffledChoice = shuffledChoices[index]!;
+      sourceToDisplayedId.set(shuffledChoice.id, slot.id);
+      return { ...slot, text: shuffledChoice.text };
+    });
+
+    const correctAnswer = Array.isArray(question.correctAnswer)
+      ? question.correctAnswer.map((id) => sourceToDisplayedId.get(id) ?? id)
+      : sourceToDisplayedId.get(question.correctAnswer) ?? question.correctAnswer;
+
+    const officialKeyDisplay = Array.isArray(correctAnswer)
+      ? correctAnswer
+          .map((id) => {
+            const option = options.find((item) => item.id === id);
+            return option ? `${option.id}) ${option.text}` : id;
+          })
+          .join(', ')
+      : typeof question.correctAnswer === 'string' && question.type !== 'fill-in-the-blank'
+        ? (() => {
+            const option = options.find((item) => item.id === correctAnswer);
+            return option ? `${option.id}) ${option.text}` : question.officialKeyDisplay;
+          })()
+        : question.officialKeyDisplay;
+
+    return { ...question, options, correctAnswer, officialKeyDisplay };
+  }, [progress.currentQuestionId, progress.optionOrder]);
 
   const currentAttempt = useMemo(() => {
     return progress.attempts[currentQuestion.id];
@@ -126,10 +163,22 @@ export function useQuizState() {
   );
 
   const resetAllProgress = useCallback(() => {
+    const optionOrder: Record<number, string[]> = {};
+    ALL_QUESTIONS.forEach((question) => {
+      if (!question.options) return;
+      const ids = question.options.map((option) => option.id);
+      for (let index = ids.length - 1; index > 0; index--) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [ids[index], ids[randomIndex]] = [ids[randomIndex], ids[index]];
+      }
+      optionOrder[question.id] = ids;
+    });
+
     setProgress({
       attempts: {},
       bookmarks: [],
       currentQuestionId: 1,
+      optionOrder,
     });
   }, []);
 
