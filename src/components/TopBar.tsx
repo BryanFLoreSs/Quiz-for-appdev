@@ -30,14 +30,15 @@ export const TopBar: React.FC<TopBarProps> = ({
 }) => {
   return (
     <header className="sticky top-0 z-30 w-full border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md transition-colors">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
         {/* Zone 1: Single text element wordmark */}
         <div className="flex items-center gap-3">
           <a
             href="/"
-            className="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+            className="text-sm sm:text-lg font-bold tracking-tight whitespace-nowrap text-slate-900 dark:text-slate-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
           >
-            SDLC & Security Quiz
+            <span className="sm:hidden">SDLC Quiz</span>
+            <span className="hidden sm:inline">SDLC &amp; Security Quiz</span>
           </a>
         </div>
 
@@ -53,7 +54,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         </div>
 
         {/* Zone 3: Primary interactive controls */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           {/* Reset quiz progress */}
           <button
             onClick={() => {
@@ -61,7 +62,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                 onReset();
               }
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-rose-700 dark:text-rose-300 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-950/70 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-2 sm:px-3 py-2 sm:py-1.5 text-xs font-medium rounded-lg text-rose-700 dark:text-rose-300 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-950/70 transition-colors cursor-pointer"
             title="Reset quiz progress"
             aria-label="Reset quiz progress"
           >
@@ -72,13 +73,13 @@ export const TopBar: React.FC<TopBarProps> = ({
           {/* 113 Grid Jump matrix button */}
           <button
             onClick={onOpenGrid}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-2 sm:px-3 py-2 sm:py-1.5 text-xs font-medium rounded-lg text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors cursor-pointer"
             title="Open 113-Question Navigation Matrix"
             aria-label="Open 113-Question Navigation Matrix"
           >
             <Grid3X3 className="w-3.5 h-3.5 text-indigo-500" />
             <span className="hidden sm:inline">Questions</span>
-            <span className="text-slate-400 font-mono text-[11px] tabular-nums">({totalQuestions})</span>
+            <span className="hidden sm:inline text-slate-400 font-mono text-[11px] tabular-nums">({totalQuestions})</span>
           </button>
 
           {/* Worksheet full view */}
@@ -95,7 +96,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           {/* Stats Dialog Trigger */}
           <button
             onClick={onOpenStats}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-2 sm:px-3 py-2 sm:py-1.5 text-xs font-medium rounded-lg text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors cursor-pointer"
             title="Review Score & Accuracy"
             aria-label="Review Score & Accuracy"
           >
