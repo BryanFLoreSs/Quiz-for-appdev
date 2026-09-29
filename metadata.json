@@ -1,0 +1,6 @@
+{
+  "name": "SDLC and Security Quiz App",
+  "description": "Interactive practice quiz featuring all 113 questions from the Introduction to SDLC and Security assessment with exact wording, instant feedback, and comprehensive explanations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
