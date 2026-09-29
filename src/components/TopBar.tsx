@@ -26,6 +26,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenGrid,
   onOpenStats,
   onOpenWorksheet,
+  onReset,
 }) => {
   return (
     <header className="sticky top-0 z-30 w-full border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md transition-colors">
@@ -53,6 +54,21 @@ export const TopBar: React.FC<TopBarProps> = ({
 
         {/* Zone 3: Primary interactive controls */}
         <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Reset quiz progress */}
+          <button
+            onClick={() => {
+              if (window.confirm('Reset all quiz progress? Your answered count and score will return to 0, and bookmarks will be cleared.')) {
+                onReset();
+              }
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-rose-700 dark:text-rose-300 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-950/70 transition-colors cursor-pointer"
+            title="Reset quiz progress"
+            aria-label="Reset quiz progress"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Reset</span>
+          </button>
+
           {/* 113 Grid Jump matrix button */}
           <button
             onClick={onOpenGrid}
