@@ -1,1 +1,4 @@
 @import "tailwindcss";
+
+/* Use the persisted .dark class as the source of truth for Tailwind dark: utilities. */
+@custom-variant dark (&:where(.dark, .dark *));
