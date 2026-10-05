@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Award, RotateCcw, CheckCircle2, XCircle, AlertTriangle, ArrowRight } from 'lucide-react';
-import { ALL_QUESTIONS, ALL_TOPICS } from '../data/questions.ts';
+import { Question, QuestionTopic } from '../types/quiz.ts';
 import { QuizProgress } from '../types/quiz.ts';
 
 interface SummaryModalProps {
@@ -9,6 +9,7 @@ interface SummaryModalProps {
   progress: QuizProgress;
   onReset: () => void;
   onJumpToQuestion: (id: number) => void;
+  questions?: Question[];
 }
 
 export const SummaryModal: React.FC<SummaryModalProps> = ({
@@ -17,12 +18,13 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
   progress,
   onReset,
   onJumpToQuestion,
+  questions = [],
 }) => {
   const [showConfirmReset, setShowConfirmReset] = useState(false);
 
   if (!isOpen) return null;
 
-  const total = ALL_QUESTIONS.length;
+  const total = questions.length;
   const attempts = progress.attempts;
   const attemptedKeys = Object.keys(attempts);
   const attemptedCount = attemptedKeys.length;
@@ -46,8 +48,8 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
   const completionRate = Math.round((attemptedCount / total) * 100);
 
   // Topic breakdown
-  const topicStats = ALL_TOPICS.map((topic) => {
-    const questionsInTopic = ALL_QUESTIONS.filter((q) => q.topic === topic);
+  const topicStats = [...new Set(questions.map((q) => q.topic))].map((topic: QuestionTopic) => {
+    const questionsInTopic = questions.filter((q) => q.topic === topic);
     const topicTotal = questionsInTopic.length;
     let topicAttempted = 0;
     let topicCorrect = 0;
@@ -84,7 +86,7 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
                 Performance & Study Progress
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                113 Questions Introduction to SDLC & Security
+                {total} Questions
               </p>
             </div>
           </div>

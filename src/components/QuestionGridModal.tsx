@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { X, Search, Filter, Bookmark, Check, AlertCircle, HelpCircle } from 'lucide-react';
-import { ALL_QUESTIONS, ALL_TOPICS } from '../data/questions.ts';
+import { Question } from '../types/quiz.ts';
 import { QuestionTopic } from '../types/quiz.ts';
 
 interface QuestionGridModalProps {
@@ -10,6 +10,7 @@ interface QuestionGridModalProps {
   attempts: Record<number, { isCorrect: boolean }>;
   bookmarks: number[];
   onSelectQuestion: (id: number) => void;
+  questions?: Question[];
 }
 
 type StatusFilter = 'all' | 'unanswered' | 'correct' | 'incorrect' | 'bookmarked';
@@ -21,6 +22,7 @@ export const QuestionGridModal: React.FC<QuestionGridModalProps> = ({
   attempts,
   bookmarks,
   onSelectQuestion,
+  questions = [],
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
@@ -28,7 +30,7 @@ export const QuestionGridModal: React.FC<QuestionGridModalProps> = ({
 
   // Filter questions based on search and filters
   const filteredQuestions = useMemo(() => {
-    return ALL_QUESTIONS.filter((q) => {
+    return questions.filter((q) => {
       // Topic match
       if (selectedTopic !== 'all' && q.topic !== selectedTopic) {
         return false;
@@ -55,7 +57,7 @@ export const QuestionGridModal: React.FC<QuestionGridModalProps> = ({
 
       return true;
     });
-  }, [selectedTopic, statusFilter, searchTerm, attempts, bookmarks]);
+  }, [selectedTopic, statusFilter, searchTerm, attempts, bookmarks, questions]);
 
   if (!isOpen) return null;
 
@@ -66,7 +68,7 @@ export const QuestionGridModal: React.FC<QuestionGridModalProps> = ({
         <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
-              113-Question Navigation Matrix
+              {questions.length}-Question Navigation Matrix
             </h3>
             <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Jump directly to any question or filter by status and topic.
@@ -90,7 +92,7 @@ export const QuestionGridModal: React.FC<QuestionGridModalProps> = ({
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search in 113 questions (e.g. Bun, Git Flow, Spiral, Next.js)..."
+              placeholder={`Search in ${questions.length} questions...`}
               className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             {searchTerm && (
@@ -137,7 +139,7 @@ export const QuestionGridModal: React.FC<QuestionGridModalProps> = ({
               className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer"
             >
               <option value="all">All Topics (5)</option>
-              {ALL_TOPICS.map((topic) => (
+              {[...new Set(questions.map((question) => question.topic))].map((topic) => (
                 <option key={topic} value={topic}>
                   {topic}
                 </option>
@@ -221,7 +223,7 @@ export const QuestionGridModal: React.FC<QuestionGridModalProps> = ({
         {/* Footer info */}
         <div className="p-3 px-5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <span>
-            Showing {filteredQuestions.length} of {ALL_QUESTIONS.length} questions
+            Showing {filteredQuestions.length} of {questions.length} questions
           </span>
           <span className="hidden sm:inline">
             Click any box to jump directly to that question

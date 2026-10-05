@@ -2,6 +2,8 @@ import React from 'react';
 import { Sun, Moon, Grid3X3, RotateCcw, BarChart2, FileText } from 'lucide-react';
 
 interface TopBarProps {
+  quizTitle: string;
+  onHome: () => void;
   currentQuestionId: number;
   totalQuestions: number;
   attemptedCount: number;
@@ -16,6 +18,8 @@ interface TopBarProps {
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
+  quizTitle,
+  onHome,
   currentQuestionId,
   totalQuestions,
   attemptedCount,
@@ -33,13 +37,13 @@ export const TopBar: React.FC<TopBarProps> = ({
       <div className="max-w-6xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
         {/* Zone 1: Single text element wordmark */}
         <div className="flex items-center gap-3">
-          <a
-            href="/"
+          <button
+            onClick={onHome}
             className="text-sm sm:text-lg font-bold tracking-tight whitespace-nowrap text-slate-900 dark:text-slate-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
           >
-            <span className="sm:hidden">SDLC Quiz</span>
-            <span className="hidden sm:inline">SDLC &amp; Security Quiz</span>
-          </a>
+            <span className="sm:hidden">{quizTitle}</span>
+            <span className="hidden sm:inline">Study Library <span className="text-slate-400">/</span> {quizTitle}</span>
+          </button>
         </div>
 
         {/* Zone 2: Progress & live stats unboxed with typographic separators */}

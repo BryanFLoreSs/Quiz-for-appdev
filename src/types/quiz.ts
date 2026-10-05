@@ -5,7 +5,11 @@ export type QuestionTopic =
   | 'Git & Version Control'
   | 'JavaScript & Bun/Node'
   | 'Architecture & Web'
-  | 'DevOps & Security';
+  | 'DevOps & Security'
+  | 'Information Security'
+  | 'Information Assurance'
+  | 'Threats & Controls'
+  | 'STRIDE Threat Model';
 
 export interface Option {
   id: string; // e.g. 'a', 'b', 'c', 'd'

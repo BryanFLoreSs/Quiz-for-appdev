@@ -1,11 +1,13 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { ALL_QUESTIONS, checkAnswer } from '../data/questions.ts';
+import { checkAnswer } from '../data/questions.ts';
+import { Question } from '../types/quiz.ts';
 import { QuestionAttempt, QuizProgress } from '../types/quiz.ts';
 
-const STORAGE_KEY = 'sdlc_security_quiz_state_v1';
+const STORAGE_KEY = 'quiz_state_v2';
 const THEME_KEY = 'sdlc_quiz_theme';
 
-export function useQuizState() {
+export function useQuizState(quizId: string, questions: Question[]) {
+  const storageKey = `${STORAGE_KEY}_${quizId}`;
   // Theme state
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     try {
@@ -34,13 +36,13 @@ export function useQuizState() {
   // Quiz state
   const [progress, setProgress] = useState<QuizProgress>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
         return {
           attempts: parsed.attempts || {},
           bookmarks: Array.isArray(parsed.bookmarks) ? parsed.bookmarks : [],
-          currentQuestionId: typeof parsed.currentQuestionId === 'number' ? parsed.currentQuestionId : 1,
+          currentQuestionId: typeof parsed.currentQuestionId === 'number' && parsed.currentQuestionId <= questions.length ? parsed.currentQuestionId : 1,
           optionOrder: parsed.optionOrder && typeof parsed.optionOrder === 'object' ? parsed.optionOrder : {},
         };
       }
@@ -57,15 +59,15 @@ export function useQuizState() {
   // Sync to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      localStorage.setItem(storageKey, JSON.stringify(progress));
     } catch {
       // ignore
     }
-  }, [progress]);
+  }, [progress, storageKey]);
 
   const currentQuestion = useMemo(() => {
-    const q = ALL_QUESTIONS.find((item) => item.id === progress.currentQuestionId);
-    const question = q || ALL_QUESTIONS[0];
+    const q = questions.find((item) => item.id === progress.currentQuestionId);
+    const question = q || questions[0];
     const order = progress.optionOrder?.[question.id];
     if (!question.options || !order) return question;
 
@@ -102,7 +104,7 @@ export function useQuizState() {
         : question.officialKeyDisplay;
 
     return { ...question, options, correctAnswer, officialKeyDisplay };
-  }, [progress.currentQuestionId, progress.optionOrder]);
+  }, [progress.currentQuestionId, progress.optionOrder, questions]);
 
   const currentAttempt = useMemo(() => {
     return progress.attempts[currentQuestion.id];
@@ -114,24 +116,24 @@ export function useQuizState() {
 
   // Actions
   const goToQuestion = useCallback((id: number) => {
-    if (id >= 1 && id <= ALL_QUESTIONS.length) {
+    if (id >= 1 && id <= questions.length) {
       setProgress((prev) => ({ ...prev, currentQuestionId: id }));
     }
-  }, []);
+  }, [questions.length]);
 
   const nextQuestion = useCallback(() => {
     setProgress((prev) => {
-      const nextId = prev.currentQuestionId < ALL_QUESTIONS.length ? prev.currentQuestionId + 1 : 1;
+      const nextId = prev.currentQuestionId < questions.length ? prev.currentQuestionId + 1 : 1;
       return { ...prev, currentQuestionId: nextId };
     });
-  }, []);
+  }, [questions.length]);
 
   const prevQuestion = useCallback(() => {
     setProgress((prev) => {
-      const prevId = prev.currentQuestionId > 1 ? prev.currentQuestionId - 1 : ALL_QUESTIONS.length;
+      const prevId = prev.currentQuestionId > 1 ? prev.currentQuestionId - 1 : questions.length;
       return { ...prev, currentQuestionId: prevId };
     });
-  }, []);
+  }, [questions.length]);
 
   const toggleBookmark = useCallback((id?: number) => {
     const targetId = id ?? currentQuestion.id;
@@ -164,7 +166,7 @@ export function useQuizState() {
 
   const resetAllProgress = useCallback(() => {
     const optionOrder: Record<number, string[]> = {};
-    ALL_QUESTIONS.forEach((question) => {
+    questions.forEach((question) => {
       if (!question.options) return;
       const ids = question.options.map((option) => option.id);
       for (let index = ids.length - 1; index > 0; index--) {
@@ -180,10 +182,10 @@ export function useQuizState() {
       currentQuestionId: 1,
       optionOrder,
     });
-  }, []);
+  }, [questions]);
 
   const stats = useMemo(() => {
-    const total = ALL_QUESTIONS.length;
+    const total = questions.length;
     const attemptedKeys = Object.keys(progress.attempts);
     const attemptedCount = attemptedKeys.length;
     let correctCount = 0;
@@ -207,7 +209,7 @@ export function useQuizState() {
       completionRate,
       bookmarkedCount: progress.bookmarks.length,
     };
-  }, [progress]);
+  }, [progress, questions.length]);
 
   return {
     isDarkMode,
