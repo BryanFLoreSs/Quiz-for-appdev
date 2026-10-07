@@ -7,11 +7,13 @@ import { SummaryModal } from './components/SummaryModal.tsx';
 import { WorksheetViewModal } from './components/WorksheetViewModal.tsx';
 import { ALL_QUESTIONS } from './data/questions.ts';
 import { FIAS_QUESTIONS } from './data/questionsFIAS.ts';
+import { SWRE_MODULES_1_TO_10_QUESTIONS } from './data/questionsSWRE1to10.ts';
 import { ArrowRight, BookOpen, Keyboard, ShieldCheck } from 'lucide-react';
 
 const QUIZZES = [
   { id: 'sdlc', title: 'Introduction to SDLC and Security Assessment', shortTitle: 'SDLC & Security', description: 'Software development models, Git, web architecture, DevOps, and security assessment.', questions: ALL_QUESTIONS },
   { id: 'fias', title: 'Fundamentals of Information Assurance and Security', shortTitle: 'FIAS', description: 'Information security, the CIA triad, threats and controls, and STRIDE threat modeling.', questions: FIAS_QUESTIONS },
+  { id: 'swre-modules-1-10', title: 'Switching, Routing, Wireless Essentials', shortTitle: 'SRWE · Modules 1–10', description: 'All 233 questions from the ten supplied module quizzes, with answer choices and explanations.', questions: SWRE_MODULES_1_TO_10_QUESTIONS },
 ];
 
 export default function App() {

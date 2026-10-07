@@ -9,7 +9,16 @@ export type QuestionTopic =
   | 'Information Security'
   | 'Information Assurance'
   | 'Threats & Controls'
-  | 'STRIDE Threat Model';
+  | 'STRIDE Threat Model'
+  | 'Switching Concepts'
+  | 'VLANs'
+  | 'Inter-VLAN Routing'
+  | 'Redundant Networks'
+  | 'EtherChannel'
+  | 'DHCPv4'
+  | 'IPv6 Addressing'
+  | 'First-Hop Redundancy'
+  | 'LAN Security';
 
 export interface Option {
   id: string; // e.g. 'a', 'b', 'c', 'd'
