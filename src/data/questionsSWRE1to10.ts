@@ -31,7 +31,7 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
       "a",
       "b"
     ],
-    "officialKeyDisplay": "c) View a list of commands entered in a previous session.; d) Recall up to 15 command lines by default.",
+    "officialKeyDisplay": "a) Set the command history buffer size.; b) Recall previously entered commands.",
     "explanation": "The history command allows you to view and reuse previously entered commands stored in the buffer. It is also used to manage the of the buffer.",
     "topic": "Switching Concepts",
     "id": 1
@@ -757,8 +757,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "A hub forwards frames, and a switch forwards only packets."
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) Each port of a hub is a collision domain, and each port of a switch is a broadcast domain.",
+    "correctAnswer": "c",
+    "officialKeyDisplay": "c) A switch creates many smaller collision domains, and a hub increases the size of a single collision domain.",
     "explanation": "Hubs operate only at the physical layer, forwarding bits as wire signals out all ports, and extend the collision domain of a network. Switches forward frames at the data link layer and each switch port is a separate collision domain, and thus more, but smaller, collision domains are created. Switches do not manage broadcast domains because broadcast frames are always forwarded out all active ports.",
     "topic": "Switching Concepts",
     "id": 27
@@ -988,8 +988,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "store-and-forward: ensures that the frame is free of physical and data-link errors"
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) cut-through: provides the flexibility to support any mix of Ethernet speeds",
+    "correctAnswer": "d",
+    "officialKeyDisplay": "d) store-and-forward: ensures that the frame is free of physical and data-link errors",
     "explanation": "Store-and-forward switching performs an error check on an incoming frame after receiving the entire frame on the ingress port. Switches which use this method have the flexibility to support any mix of Ethernet speeds. The cut-through method begins the forwarding process after the destination MAC address of an incoming frame is looked up and the egress port has been determined.",
     "topic": "Switching Concepts",
     "id": 35
@@ -1015,8 +1015,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "Ethernet bridge"
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) Ethernet hub",
+    "correctAnswer": "a",
+    "officialKeyDisplay": "a) router",
     "explanation": "Layer 1 and 2 devices (LAN switch and Ethernet hub) and access point devices do not filter MAC broadcast frames. Only a Layer 3 device, such as a router, can divide a Layer 2 broadcast domain.",
     "topic": "Switching Concepts",
     "id": 36
@@ -1042,8 +1042,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "They provide a basic security scan on received frames."
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) They provide temporary storage of the frame checksum.",
+    "correctAnswer": "c",
+    "officialKeyDisplay": "c) They hold traffic, thus alleviating network congestion.",
     "explanation": "Switches have large frame buffers that allow data waiting to be transmitted to be stored so the data will not be dropped. This feature is beneficial especially if the incoming traffic is from a faster port than the egress port used for transmitting.",
     "topic": "Switching Concepts",
     "id": 37
@@ -1404,8 +1404,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "The native VLAN is for routers and switches to exchange their management information, so it should be different from data VLANS."
       }
     ],
-    "correctAnswer": "c",
-    "officialKeyDisplay": "c) The native VLAN is for carrying VLAN mnanagement traffic only.",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) A separate VLAN should be used to carry uncommon untagged frames to avoid bandwidth contention on data VLANS.",
     "explanation": "When a Cisco switch trunk port receives untagged frames (unusual in well-designed networks), it forwards these frames to the native VLAN. When the native VLAN is moved away from data VLANs, those untagged frames will not compete for bandwidth in the data VLANs. The native VLAN is not designed for carrying management traffic, but rather it is for backward compatibility with legacy LAN scenarios.",
     "topic": "VLANs",
     "id": 50
@@ -1763,8 +1763,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "VLAN 1"
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) Data",
+    "correctAnswer": "c",
+    "officialKeyDisplay": "c) Native",
     "explanation": "A native VLAN is the VLAN that does not receive a VLAN tag in the IEEE 802.1Q frame header. Cisco best practices recommend the use of an unused VLAN (not a data VLAN, the default VLAN of VLAN 1, or the management VLAN) as the native VLAN whenever possible.",
     "topic": "VLANs",
     "id": 62
@@ -1878,8 +1878,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "Erase the startup configuration and reboot the switch."
       }
     ],
-    "correctAnswer": "d",
-    "officialKeyDisplay": "d) Erase the startup configuration and reboot the switch.",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) Delete the startup configuration and the vlan.dat file in the flash memory of the switch and reboot the switch.",
     "explanation": "To restore a Catalyst switch to its factory default condition, unplug all cables except the console and power cable from the switch. Then enter the erase startup-config privileged EXEC mode command followed by the delete vlan.dat command and reboot the switch.",
     "topic": "VLANs",
     "id": 66
@@ -2000,8 +2000,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "multiple physical interfaces on the router, all connected to a Layer 2 switch"
       }
     ],
-    "correctAnswer": "c",
-    "officialKeyDisplay": "c) trunked interface between the router and the switch",
+    "correctAnswer": "a",
+    "officialKeyDisplay": "a) multilayer switch with routing enabled",
     "explanation": "A router-on-a-stick design is the same as having a trunked interface between the router and the switch. This design works, but does not scale well because all VLANs must traverse the one connection between the router and the switch. Multiple physical interfaces on the router would be faster than the router-on-a-stick design, but a router has a limited number of physical interfaces. Layer 3 switches with routing enabled have more Ethernet ports as well as the ability to route.",
     "topic": "Inter-VLAN Routing",
     "id": 70
@@ -2081,8 +2081,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "A switch with a port that is configured as trunk is needed to connect to a router."
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) Two groups of switches are needed, each with ports that are configured for one VLAN.",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) A router with at least two LAN interfaces should be used.",
     "explanation": "With legacy inter-VLAN routing, different physical router interfaces are connected to different physical switch ports. The switch ports that connect to the router are in access mode, each belonging to a different VLAN. Switches can have ports that are assigned to different VLANs, but communication between VLANs requires routing function from the router.",
     "topic": "Inter-VLAN Routing",
     "id": 73
@@ -2270,8 +2270,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "dynamic desirable"
       }
     ],
-    "correctAnswer": "c",
-    "officialKeyDisplay": "c) access",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) trunk",
     "explanation": "Routers do not support Dynamic Trunking Protocol, and access mode is used to connect hosts.",
     "topic": "Inter-VLAN Routing",
     "id": 80
@@ -2351,8 +2351,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "a Layer 2 switch that is configured with multiple trunk ports"
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) a multilayer switch",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) a router that is configured with multiple subinterfaces",
     "explanation": "With router-on-a-stick inter-VLAN routing, a single physical router interface is used to route packets between multiple VLANs if the interface is configured with multiple subinterfaces. A separate subinterface is needed for each VLAN that will be routed. Because the router is performing all routing functions, a multilayer switch is not required.",
     "topic": "Inter-VLAN Routing",
     "id": 83
@@ -2412,8 +2412,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "Use a hub to connect the four VLANS with a FastEthernet interface on the router."
       }
     ],
-    "correctAnswer": "c",
-    "officialKeyDisplay": "c) Interconnect the VLANs via the two additional FastEthernet interfaces.",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) Implement a router-on-a-stick configuration.",
     "explanation": "Using legacy inter-VLAN routing to interconnect four VLANs would require four separate physical interfaces. Therefore, the best router-based solution is to configure a router-on-a-stick.",
     "topic": "Inter-VLAN Routing",
     "id": 85
@@ -2439,8 +2439,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "Traditional routing uses multiple paths to the router and therefore requires STP, whereas router-on-a-stick does not provide multiple connections and therefore eliminates the need for STP."
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) Traditional routing is able to use only a single switch interface, whereas a router-on-a-stick can use multiple switch interfaces.",
+    "correctAnswer": "c",
+    "officialKeyDisplay": "c) Traditional routing uses one port per logical network, whereas a router-on-a-stick uses subinterfaces to connect multiple logical networks to a single router port.",
     "explanation": "Router-on-a-stick requires one interface configured as subinterfaces for each VLAN.",
     "topic": "Inter-VLAN Routing",
     "id": 86
@@ -2520,8 +2520,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "Create the VLANs on the switch to include port membership assignment and configure subinterfaces on the router matching the VLANs."
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) Create the VLANs on the router and define the port membership assignments on the switch.",
+    "correctAnswer": "d",
+    "officialKeyDisplay": "d) Create the VLANs on the switch to include port membership assignment and configure subinterfaces on the router matching the VLANs.",
     "explanation": "The switch port must be configured as a trunk, and the VLANs on the switch must have users connected to them.",
     "topic": "Inter-VLAN Routing",
     "id": 89
@@ -2581,8 +2581,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "R1(config-subif)# encapsulation dot1q 20"
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) R1(config-if)# encapsulation 802.1q 20",
+    "correctAnswer": "d",
+    "officialKeyDisplay": "d) R1(config-subif)# encapsulation dot1q 20",
     "explanation": "The encapsulation dot1q vlan_id [native] command configures the subinterface to respond to 802.1Q encapsulated traffic from the specified vlan-id. The native keyword option is only appended to set the native VLAN to something other than VLAN 1.",
     "topic": "Inter-VLAN Routing",
     "id": 91
@@ -2730,8 +2730,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "Each switch will analyze the BID of all neighbors to reach the root and use the path through the lowest BID neighbors."
       }
     ],
-    "correctAnswer": "c",
-    "officialKeyDisplay": "c) Each switch will analyze the sum of the hops to reach the root and use the path with the fewest hops.",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) Each switch will analyze the sum of all port costs to reach the root and use the path with the lowest cost.",
     "explanation": "After the election of a root bridge has occurred, each switch will have to determine the best path to the root bridge from its location. The path is determined by summing the individual port costs along the path from each switch port to the root bridge.",
     "topic": "Redundant Networks",
     "id": 96
@@ -2915,8 +2915,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "blocking"
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) forwarding",
+    "correctAnswer": "c",
+    "officialKeyDisplay": "c) listening",
     "explanation": "Ports in the blocking state are nondesignated ports and do not participate in frame forwarding. Ports in the listening state can participate in BPDU frame forwarding according to received BPDU frames, but do not forward data frames. Ports in the forwarding state forward data frames and send and receive BPDU frames. Ports in the disabled state are administratively disabled.",
     "topic": "Redundant Networks",
     "id": 102
@@ -2974,10 +2974,10 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
       }
     ],
     "correctAnswer": [
-      "a",
-      "b"
+      "b",
+      "e"
     ],
-    "officialKeyDisplay": "a) The switch port immediately transitions from the listening to the forwarding state.; b) The switch port immediately transitions from blocking to the forwarding state.",
+    "officialKeyDisplay": "b) The switch port immediately transitions from blocking to the forwarding state.; e) The switch port should never receive BPDUs.",
     "explanation": "A port that is configured with PortFast will immediately transition from blocking to the forwarding state. PortFast should only be configured on switch ports that support end devices, so no BPDUs should ever be received through a port that is configured with PortFast. Configuring a port with PortFast supports DHCP because PortFast will speed up the transition from blocking to forwarding. Without PortFast, an end device may begin to issue DHCP requests before the port has transitioned to the forwarding state.",
     "topic": "Redundant Networks",
     "id": 104
@@ -3030,8 +3030,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "VLAN ID"
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) MAC address",
+    "correctAnswer": "d",
+    "officialKeyDisplay": "d) VLAN ID",
     "explanation": "The BPDU has three fields; the bridge priority, the extended system ID, and the MAC address. The extended system ID contains 12 bits that identify the VLAN ID.",
     "topic": "Redundant Networks",
     "id": 106
@@ -3245,8 +3245,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "PVST+"
       }
     ],
-    "correctAnswer": "c",
-    "officialKeyDisplay": "c) PortFast",
+    "correctAnswer": "a",
+    "officialKeyDisplay": "a) BPDU guard",
     "explanation": "If switch access ports are configured as edge ports using PortFast, BPDUs should never be received on those ports. Cisco switches support a feature called BPDU guard. When it is enabled, BPDU guard will put an edge port in an error-disabled state if a BPDU is received by the port. This will prevent a Layer 2 loop occurring.",
     "topic": "Redundant Networks",
     "id": 113
@@ -3465,8 +3465,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "The EtherChannel continues transmitting data with reduced bandwidth."
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) The EtherChannel link fails.",
+    "correctAnswer": "d",
+    "officialKeyDisplay": "d) The EtherChannel continues transmitting data with reduced bandwidth.",
     "explanation": "An EtherChannel is seen as one logical connection. The loss of one physical link within the channel does not create a change in the topology and therefore a spanning tree recalculation is not required. When one of the member ports in the EtherChannel fails, the EtherChannel link remains functional, although its overall throughput decreases because of a lost link within the EtherChannel.",
     "topic": "EtherChannel",
     "id": 120
@@ -3519,8 +3519,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "passive"
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) desirable",
+    "correctAnswer": "c",
+    "officialKeyDisplay": "c) auto",
     "explanation": "The command channel-group mode active enables LACP unconditionally, and the command channel-group mode passive enables LACP only if the port receives an LACP packet from another device. The command channel-group mode desirable enables PAgP unconditionally, and the command channel-group mode auto enables PAgP only if the port receives a PAgP packet from another device.",
     "topic": "EtherChannel",
     "id": 122
@@ -3611,8 +3611,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "Links must be upgraded to support EtherChannel."
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) All configuration tasks must be done on the individual ports in the EtherChannel link.",
+    "correctAnswer": "c",
+    "officialKeyDisplay": "c) EtherChannel uses existing switch ports.",
     "explanation": "EtherChannel relies on existing switch ports, so there is no need to upgrade the links. Some configuration tasks are done on individual ports and some configuration tasks are done on the EtherChannel group. STP operates on EtherChannel in the same manner as it does on other redundant links.",
     "topic": "EtherChannel",
     "id": 125
@@ -3795,8 +3795,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "Increase the speed of the ports using the bandwidth command."
       }
     ],
-    "correctAnswer": "d",
-    "officialKeyDisplay": "d) Increase the speed of the ports using the bandwidth command.",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) Bundle physical ports using EtherChannel.",
     "explanation": "Increasing the link speed does not scale very well. Adding more VLANs will not reduce the amount of traffic that is flowing across the link. Inserting a router between the switches will not improve congestion.",
     "topic": "EtherChannel",
     "id": 131
@@ -4269,8 +4269,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "It is a SOHO or home broadband router."
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) The router is configured as a DHCP server.",
+    "correctAnswer": "d",
+    "officialKeyDisplay": "d) It is a SOHO or home broadband router.",
     "explanation": "SOHO and home broadband routers are typically set to acquire an IPv4 address automatically from the ISP. The IP address that is assigned is typically a dynamic address to reduce the cost, but a static IP address is possible with more cost. However, if the router is assigned a dynamic IP address, DNS issues will result in the web server behind the router not being easily accessible to the public. Routers are typically also gateways for LANs, but this has no bearing on whether the router is configured as a DHCP client on its WAN link or not. Likewise, a router can be configured to be a DHCP client in order to obtain an IP address from the ISP, but at the same time, it can be configured as a DHCP server to serve the IP addressing for the devices on its LAN.",
     "topic": "DHCPv4",
     "id": 147
@@ -4492,8 +4492,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "It will allow DHCPDISCOVER messages to pass without alteration"
       }
     ],
-    "correctAnswer": "c",
-    "officialKeyDisplay": "c) It reduces the response time from a DHCP server.",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) It can provide relay services for multiple UDP services.",
     "explanation": "By default, the ip helper-address command forwards the following eight UDP services:\nPort 37: Time\nPort 49: TACACS\nPort 53: DNS\nPort 67: DHCP/BOOTP client\nPort 68: DHCP/BOOTP server\nPort 69: TFTP\nPort 137: NetBIOS name service\nPort 138: NetBIOS datagram service",
     "topic": "DHCPv4",
     "id": 155
@@ -4627,8 +4627,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "When a DHCP client boots, it broadcasts a DHCPDISCOVER message to identify an available DHCP server on the network."
       }
     ],
-    "correctAnswer": "c",
-    "officialKeyDisplay": "c) The DHCPDISCOVER message contains the IPv4 address and subnet mask to be assigned, the IPv4 address of the DNS server, and the IPv4 address of the default gateway.",
+    "correctAnswer": "d",
+    "officialKeyDisplay": "d) When a DHCP client boots, it broadcasts a DHCPDISCOVER message to identify an available DHCP server on the network.",
     "explanation": "The client broadcasts a DHCPDISCOVER message to identify any available DHCP servers on the network. A DHCP server replies with a DHCPOFFER message. This message offers to the client a lease that contains such information as the IPv4 address and subnet mask to be assigned, the IPv4 address of the DNS server, and the IPv4 address of the default gateway. After the client receives the lease, the received information must be renewed through another DHCPREQUEST message prior to the lease expiration.",
     "topic": "DHCPv4",
     "id": 160
@@ -4877,8 +4877,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "DHCPv6 SOLICIT"
       }
     ],
-    "correctAnswer": "c",
-    "officialKeyDisplay": "c) DHCPv6 ADVERTISE",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) DHCPv6 INFORMATION-REQUEST",
     "explanation": "In stateless DHCPv6 configuration, a client configures its IPv6 address by using the prefix and prefix length in the RA message, combined with a self-generated interface ID. It then contacts a DHCPv6 server for additional configuration information via an INFORMATION-REQUEST message. The DHCPv6 SOLICIT message is used by a client to locate a DHCPv6 server. The DHCPv6 ADVERTISE message is used by DHCPv6 servers to indicate their availability for DHCPv6 service. The DHCPv6 REQUEST message is used by a client, in the stateful DHCPv6 configuration, to request ALL configuration information from a DHCPv6 server.",
     "topic": "IPv6 Addressing",
     "id": 169
@@ -4965,8 +4965,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "The client should be statically configured with an IPv6 address because the local router does not support autoconfiguration."
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) The client should request an IPv6 address directly from a DHCPv6 server.",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) The client should automatically configure an IPv6 address and then contact a DHCPv6 server for more information.",
     "explanation": "The Managed Address Configuration (M) flag and the Other Configuration (O) flag in ICMPv6 RA messages are used to indicate to an IPv6 client how it should configure its IPv6 addresses. If the M flag is set to 0 it means that the host should automatically configure its own IPv6 interface address rather than asking for one from a DHCPv6 server. If the O flag is set to 1, it means that the client can find additional addressing information, such as a DNS server address, by contacting a DHCPv6 server after it has automatically configured its own address.",
     "topic": "IPv6 Addressing",
     "id": 172
@@ -5046,8 +5046,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "It should use the information that is contained in the RA message exclusively."
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) It should contact a DHCPv6 server for all the information that it needs.",
+    "correctAnswer": "c",
+    "officialKeyDisplay": "c) It should use the information that is contained in the RA message and contact a DHCPv6 server for additional information.",
     "explanation": "ICMPv6 RA messages contain flags to indicate whether a workstation should use SLAAC, a DHCPv6 server, or a combination to configure its IPv6 address. The A flag determines whether to use SLAAC. The O flag indicates whether to use a stateless DHCPv6 server. The M flag indicates whether to use stateful DHCPv6. The M and O flags are independent of SLAAC.",
     "topic": "IPv6 Addressing",
     "id": 175
@@ -5073,8 +5073,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "SLAAC and stateless DHCPv6"
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) SLAAC",
+    "correctAnswer": "d",
+    "officialKeyDisplay": "d) SLAAC and stateless DHCPv6",
     "explanation": "SLAAC and stateless DHCPv6 enable clients to use ICMPv6 Router Advertisement (RA) messages to automatically assign IPv6 addresses to themselves, and also allow these clients to contact a stateless DHCPv6 server to obtain additional information, such as the domain name and address of DNS servers. Because the M flag is 0 by default, stateful DHCPv6 will not be used. RA messages are used to automatically create an interface IPv6 address.",
     "topic": "IPv6 Addressing",
     "id": 176
@@ -5181,8 +5181,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "It should use the information that is contained in the RA message exclusively."
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) It should contact a DHCPv6 server for all the information that it needs.",
+    "correctAnswer": "c",
+    "officialKeyDisplay": "c) It should use the information that is contained in the RA message and contact a DHCPv6 server for additional information.",
     "explanation": "When the A flag is set to 1 (default) the client will use SLAAC to configure its GUA address. When M flag is 0 and O flag is 1, a client will look for other configuration parameters (such as DNS server addresses) from a stateless DHCPv6 server.",
     "topic": "IPv6 Addressing",
     "id": 180
@@ -5235,8 +5235,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "It prevents malicious hosts from connecting to trunk ports."
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) It prevents a rogue switch from becoming the STP root.",
+    "correctAnswer": "b",
+    "officialKeyDisplay": "b) It provides a continuous network connection when a router fails.",
     "explanation": "HSRP is a first hop redundancy protocol and allows hosts to use multiple gateways through the use of a single virtual router.",
     "topic": "First-Hop Redundancy",
     "id": 182
@@ -5289,8 +5289,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "It supports IPv6 and IPv4 addressing."
       }
     ],
-    "correctAnswer": "c",
-    "officialKeyDisplay": "c) VRRPv3 is Cisco proprietary.",
+    "correctAnswer": "d",
+    "officialKeyDisplay": "d) It supports IPv6 and IPv4 addressing.",
     "explanation": "VRRPv3 is a non-proprietary, first-hop router redundancy protocol. It provides features for both IPv4 and IPv6 addressing. HSRP and GLBP are both Cisco-proprietary protocols. GLBP provides load balancing between a group of redundant routers.",
     "topic": "First-Hop Redundancy",
     "id": 184
@@ -5316,8 +5316,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "HSRP does not have the capability to support IPv6 addresses."
       }
     ],
-    "correctAnswer": "a",
-    "officialKeyDisplay": "a) HSRP provides default gateway failover only when the active router fails.",
+    "correctAnswer": "c",
+    "officialKeyDisplay": "c) HSRP does not provide load balancing with multiple active routers.",
     "explanation": "HSRP is a first-hop redundancy protocol that can utilize a group of routers, where a single router is acting as the default gateway and all other HSRP routers will maintain a backup status. GLBP supports load balancing, where multiple active routers can share the traffic load at a single time. Both HSRP and GLBP are Cisco proprietary. HSRP provides default gateway failover when pre-set conditions are met or when the active router fails, and HSRP can support IPv6 addressing.",
     "topic": "First-Hop Redundancy",
     "id": 185
@@ -5565,8 +5565,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "It works together with VRRP."
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) It is nonproprietary.",
+    "correctAnswer": "a",
+    "officialKeyDisplay": "a) GLBP allows load balancing between routers.",
     "explanation": "The GLBP first-hop router redundancy protocol is Ciscoproprietary and supports load balancing between a group of redundant routers. VRRPv2 and VRRPv3 are nonproprietary protocols and use a virtual router master.",
     "topic": "First-Hop Redundancy",
     "id": 193
@@ -5781,8 +5781,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "The host will notice little or no disruption of service."
       }
     ],
-    "correctAnswer": "b",
-    "officialKeyDisplay": "b) The host stops seeing hello messages from the active router.",
+    "correctAnswer": "d",
+    "officialKeyDisplay": "d) The host will notice little or no disruption of service.",
     "explanation": "When the active router fails, the standby router stops seeing hello messages, assumes the role of the forwarding router, and the host devices see no disruption in service.",
     "topic": "First-Hop Redundancy",
     "id": 201
