@@ -2324,8 +2324,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
         "text": "Traffic is broadcast out all physical interfaces."
       }
     ],
-    "correctAnswer": "c",
-    "officialKeyDisplay": "c) Traffic is routed via physical interfaces.",
+    "correctAnswer": "a",
+    "officialKeyDisplay": "a) Traffic is routed via internal VLAN interfaces.",
     "explanation": "Multilayer switches can perform inter-VLAN routing by the use of internal VLAN interfaces. External physical interfaces can receive traffic but are not necessary for routing functions. When routing between VLANs, any broadcast traffic that is received on a VLAN would remain on ports that are members of that VLAN. Subinterfaces are not usable for inter-VLAN routing on multilayer switches.",
     "topic": "Inter-VLAN Routing",
     "id": 82
