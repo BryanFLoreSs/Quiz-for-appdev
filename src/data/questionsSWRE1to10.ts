@@ -28,8 +28,8 @@ export const SWRE_MODULES_1_TO_10_QUESTIONS: Question[] = [
       }
     ],
     "correctAnswer": [
-      "c",
-      "d"
+      "a",
+      "b"
     ],
     "officialKeyDisplay": "c) View a list of commands entered in a previous session.; d) Recall up to 15 command lines by default.",
     "explanation": "The history command allows you to view and reuse previously entered commands stored in the buffer. It is also used to manage the of the buffer.",
