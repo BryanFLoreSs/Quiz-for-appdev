@@ -8,7 +8,7 @@ import { WorksheetViewModal } from './components/WorksheetViewModal.tsx';
 import { ALL_QUESTIONS } from './data/questions.ts';
 import { FIAS_QUESTIONS } from './data/questionsFIAS.ts';
 import { SWRE_MODULES_1_TO_10_QUESTIONS } from './data/questionsSWRE1to10.ts';
-import { ArrowRight, BookOpen, Keyboard, LogOut, ShieldCheck } from 'lucide-react';
+import { ArrowRight, BookOpen, Eye, EyeOff, Keyboard, LogOut, ShieldCheck } from 'lucide-react';
 
 const QUIZZES = [
   { id: 'sdlc', title: 'Introduction to SDLC and Security Assessment', shortTitle: 'SDLC & Security', description: 'Software development models, Git, web architecture, DevOps, and security assessment.', questions: ALL_QUESTIONS },
@@ -43,6 +43,7 @@ export default function App() {
 function LoginScreen({ isDarkMode, onToggleTheme, onLogin }: { isDarkMode: boolean; onToggleTheme: () => void; onLogin: (email: string) => void }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -63,7 +64,7 @@ function LoginScreen({ isDarkMode, onToggleTheme, onLogin }: { isDarkMode: boole
         <p className="mt-3 text-sm leading-6 text-slate-500 dark:text-slate-400">Your quiz progress is saved in this browser.</p>
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
           <div><label htmlFor="login-email" className="block text-sm font-medium mb-2">Email</label><input id="login-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" placeholder="you@example.com" /></div>
-          <div><label htmlFor="login-password" className="block text-sm font-medium mb-2">Password</label><input id="login-password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" placeholder="••••••••" /></div>
+          <div><label htmlFor="login-password" className="block text-sm font-medium mb-2">Password</label><div className="relative"><input id="login-password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 pr-12 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" placeholder="••••••••" /><button type="button" onClick={() => setShowPassword((visible) => !visible)} className="absolute inset-y-0 right-0 px-3 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200" aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}</button></div></div>
           {error && <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{error}</p>}
           <button type="submit" className="w-full rounded-xl bg-indigo-600 px-4 py-3 font-semibold text-white hover:bg-indigo-700 transition-colors">Sign in</button>
         </form>
