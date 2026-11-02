@@ -40,6 +40,7 @@ export interface QuestionAttempt {
   userAnswer: string | string[];
   isCorrect: boolean;
   answeredAt: string;
+  confidence?: 'low' | 'medium' | 'high';
 }
 
 export interface QuizProgress {

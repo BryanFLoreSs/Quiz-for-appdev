@@ -147,12 +147,13 @@ export function useQuizState(quizId: string, questions: Question[]) {
   }, [currentQuestion.id]);
 
   const submitAnswer = useCallback(
-    (userAnswer: string | string[]) => {
+    (userAnswer: string | string[], confidence: QuestionAttempt['confidence'] = 'medium') => {
       const isCorrect = checkAnswer(currentQuestion, userAnswer);
       const attempt: QuestionAttempt = {
         userAnswer,
         isCorrect,
         answeredAt: new Date().toISOString(),
+        confidence,
       };
       setProgress((prev) => ({
         ...prev,

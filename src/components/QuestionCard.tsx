@@ -8,7 +8,7 @@ interface QuestionCardProps {
   attempt?: QuestionAttempt;
   isBookmarked: boolean;
   onToggleBookmark: () => void;
-  onSubmitAnswer: (answer: string | string[]) => boolean;
+  onSubmitAnswer: (answer: string | string[], confidence?: QuestionAttempt['confidence']) => boolean;
   onNext: () => void;
   onPrev: () => void;
   totalQuestions: number;
@@ -34,6 +34,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const [selectedMulti, setSelectedMulti] = useState<string[]>([]);
   // Local state for fill in the blank text
   const [fillBlankInput, setFillBlankInput] = useState<string>('');
+  const [confidence, setConfidence] = useState<QuestionAttempt['confidence']>('medium');
   const textInputRef = useRef<HTMLInputElement>(null);
 
   // Sync local inputs when changing question or when an attempt already exists
@@ -48,6 +49,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       setSelectedMulti([]);
       setFillBlankInput('');
     }
+    setConfidence('medium');
   }, [question.id, attempt]);
 
   // Keyboard shortcut listener
@@ -59,7 +61,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         if (e.key === 'Enter' && !attempt) {
           e.preventDefault();
           if (fillBlankInput.trim()) {
-            onSubmitAnswer(fillBlankInput.trim());
+            onSubmitAnswer(fillBlankInput.trim(), confidence);
           }
         }
         return;
@@ -82,7 +84,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           const match = question.options?.find((opt) => opt.id === key);
           if (match) {
             e.preventDefault();
-            onSubmitAnswer(key);
+            onSubmitAnswer(key, confidence);
           }
         }
       }
@@ -90,7 +92,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [question, attempt, disabled, fillBlankInput, onNext, onPrev, onToggleBookmark, onSubmitAnswer]);
+  }, [question, attempt, confidence, disabled, fillBlankInput, onNext, onPrev, onToggleBookmark, onSubmitAnswer]);
 
   const handleToggleMulti = (id: string) => {
     if (attempt || disabled) return; // already locked or timed out
@@ -101,17 +103,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   const handleMultiSubmit = () => {
     if (selectedMulti.length === 0 || disabled) return;
-    onSubmitAnswer(selectedMulti);
+    onSubmitAnswer(selectedMulti, confidence);
   };
 
   const handleFillBlankSubmit = () => {
     if (!fillBlankInput.trim() || disabled) return;
-    onSubmitAnswer(fillBlankInput.trim());
+    onSubmitAnswer(fillBlankInput.trim(), confidence);
   };
 
   const handleRevealAnswer = () => {
     if (attempt || disabled) return;
-    onSubmitAnswer(question.correctAnswer);
+    onSubmitAnswer(question.correctAnswer, confidence);
   };
 
   return (
@@ -164,6 +166,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       </h2>
 
       {/* Response Section */}
+      {!attempt && <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400"><span className="font-medium">Confidence:</span>{(['low', 'medium', 'high'] as const).map((level) => <button key={level} type="button" onClick={() => setConfidence(level)} className={`rounded-lg px-2.5 py-1 capitalize transition-colors ${confidence === level ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700'}`}>{level}</button>)}</div>}
       <div className="space-y-3">
         {/* Single Choice Mode */}
         {question.type === 'single' && question.options && (
@@ -195,7 +198,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 <button
                   key={opt.id}
                   disabled={Boolean(attempt) || disabled}
-                  onClick={() => onSubmitAnswer(opt.id)}
+                  onClick={() => onSubmitAnswer(opt.id, confidence)}
                   className={`w-full text-left p-3.5 sm:p-4 rounded-xl border flex items-start gap-3.5 transition-all text-sm sm:text-[15px] leading-relaxed cursor-pointer disabled:cursor-default ${buttonStyle}`}
                 >
                   <span
