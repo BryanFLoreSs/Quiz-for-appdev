@@ -8,7 +8,7 @@ import { WorksheetViewModal } from './components/WorksheetViewModal.tsx';
 import { ALL_QUESTIONS } from './data/questions.ts';
 import { FIAS_QUESTIONS } from './data/questionsFIAS.ts';
 import { SWRE_MODULES_1_TO_10_QUESTIONS } from './data/questionsSWRE1to10.ts';
-import { ArrowRight, BookOpen, Eye, EyeOff, Keyboard, LogOut, ShieldCheck } from 'lucide-react';
+import { ArrowRight, BookOpen, Eye, EyeOff, Keyboard, LogOut, ShieldCheck, Timer } from 'lucide-react';
 
 const QUIZZES = [
   { id: 'sdlc', title: 'Introduction to SDLC and Security Assessment', shortTitle: 'SDLC & Security', description: 'Software development models, Git, web architecture, DevOps, and security assessment.', questions: ALL_QUESTIONS },
@@ -109,9 +109,29 @@ function QuizScreen({ quiz, isDarkMode, onToggleTheme, onHome }: { quiz: typeof 
   const [isGridOpen, setIsGridOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isWorksheetOpen, setIsWorksheetOpen] = useState(false);
+  const [isTimed, setIsTimed] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(10 * 60);
+
+  useEffect(() => {
+    if (!isTimed || timeLeft <= 0) return;
+    const timer = window.setInterval(() => setTimeLeft((current) => Math.max(0, current - 1)), 1000);
+    return () => window.clearInterval(timer);
+  }, [isTimed, timeLeft]);
+
+  useEffect(() => {
+    if (isTimed && timeLeft === 0) {
+      setIsStatsOpen(true);
+    }
+  }, [isTimed, timeLeft]);
+
+  const startTimedPractice = () => {
+    setTimeLeft(10 * 60);
+    setIsTimed(true);
+  };
+  const formattedTime = `${Math.floor(timeLeft / 60).toString().padStart(2, '0')}:${(timeLeft % 60).toString().padStart(2, '0')}`;
   return <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors antialiased selection:bg-indigo-500/20 selection:text-indigo-600 dark:selection:text-indigo-300">
     <TopBar quizTitle={quiz.shortTitle} onHome={onHome} currentQuestionId={currentQuestion.id} totalQuestions={stats.total} attemptedCount={stats.attemptedCount} correctCount={stats.correctCount} accuracy={stats.accuracy} isDarkMode={isDarkMode} onToggleTheme={onToggleTheme} onOpenGrid={() => setIsGridOpen(true)} onOpenStats={() => setIsStatsOpen(true)} onOpenWorksheet={() => setIsWorksheetOpen(true)} onReset={resetAllProgress} />
-    <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 flex flex-col justify-center"><QuestionCard question={currentQuestion} attempt={currentAttempt} isBookmarked={isBookmarked} onToggleBookmark={() => toggleBookmark(currentQuestion.id)} onSubmitAnswer={submitAnswer} onNext={nextQuestion} onPrev={prevQuestion} totalQuestions={stats.total} note={progress.notes?.[currentQuestion.id]} onSaveNote={(note) => updateNote(currentQuestion.id, note)} />
+    <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 flex flex-col justify-center">{isTimed ? <div className={`max-w-3xl mx-auto w-full mb-4 rounded-xl px-4 py-3 flex items-center justify-between text-sm ${timeLeft <= 60 ? 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300' : 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-300'}`}><span className="flex items-center gap-2 font-semibold"><Timer className="w-4 h-4" />{timeLeft === 0 ? 'Time expired' : 'Timed practice'}</span>{timeLeft === 0 ? <button onClick={startTimedPractice} className="font-semibold underline">Restart</button> : <span className="font-mono font-bold tabular-nums">{formattedTime}</span>}</div> : <div className="max-w-3xl mx-auto w-full mb-4 flex justify-end"><button onClick={startTimedPractice} className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30"><Timer className="w-3.5 h-3.5" />Start 10-minute practice</button></div>}<QuestionCard question={currentQuestion} attempt={currentAttempt} isBookmarked={isBookmarked} onToggleBookmark={() => toggleBookmark(currentQuestion.id)} onSubmitAnswer={submitAnswer} onNext={nextQuestion} onPrev={prevQuestion} totalQuestions={stats.total} note={progress.notes?.[currentQuestion.id]} onSaveNote={(note) => updateNote(currentQuestion.id, note)} disabled={isTimed && timeLeft === 0} />
       <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-400 dark:text-slate-500 max-w-3xl mx-auto w-full px-2"><div className="flex items-center gap-2"><Keyboard className="w-3.5 h-3.5" /><span>Shortcuts: A-D to answer · ← / → to navigate · B to bookmark</span></div><div className="flex items-center gap-3"><button onClick={() => setIsGridOpen(true)} className="hover:text-slate-700 dark:hover:text-slate-300">{stats.total}-Question Grid</button>{quiz.id === 'sdlc' && <><span>·</span><button onClick={() => setIsWorksheetOpen(true)} className="hover:text-slate-700 dark:hover:text-slate-300">Worksheet View</button></>}</div></div>
     </main>
     <footer className="w-full border-t border-slate-200 dark:border-slate-800/80 py-4 text-center text-xs text-slate-400 dark:text-slate-500"><div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2"><span>{quiz.title} ({quiz.questions.length} Questions)</span><span className="font-mono tabular-nums text-[11px]">{stats.attemptedCount} of {stats.total} completed ({stats.completionRate}%)</span></div></footer>

@@ -14,6 +14,7 @@ interface QuestionCardProps {
   totalQuestions: number;
   note?: string;
   onSaveNote: (note: string) => void;
+  disabled?: boolean;
 }
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -27,6 +28,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   totalQuestions,
   note = '',
   onSaveNote,
+  disabled = false,
 }) => {
   // Local state for multiple choice selections before submitting
   const [selectedMulti, setSelectedMulti] = useState<string[]>([]);
@@ -51,6 +53,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   // Keyboard shortcut listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (disabled) return;
       // Don't trigger if user is typing in the input box
       if (document.activeElement === textInputRef.current) {
         if (e.key === 'Enter' && !attempt) {
@@ -87,27 +90,27 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [question, attempt, fillBlankInput, onNext, onPrev, onToggleBookmark, onSubmitAnswer]);
+  }, [question, attempt, disabled, fillBlankInput, onNext, onPrev, onToggleBookmark, onSubmitAnswer]);
 
   const handleToggleMulti = (id: string) => {
-    if (attempt) return; // already locked
+    if (attempt || disabled) return; // already locked or timed out
     setSelectedMulti((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
   const handleMultiSubmit = () => {
-    if (selectedMulti.length === 0) return;
+    if (selectedMulti.length === 0 || disabled) return;
     onSubmitAnswer(selectedMulti);
   };
 
   const handleFillBlankSubmit = () => {
-    if (!fillBlankInput.trim()) return;
+    if (!fillBlankInput.trim() || disabled) return;
     onSubmitAnswer(fillBlankInput.trim());
   };
 
   const handleRevealAnswer = () => {
-    if (attempt) return;
+    if (attempt || disabled) return;
     onSubmitAnswer(question.correctAnswer);
   };
 
@@ -191,7 +194,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
               return (
                 <button
                   key={opt.id}
-                  disabled={Boolean(attempt)}
+                  disabled={Boolean(attempt) || disabled}
                   onClick={() => onSubmitAnswer(opt.id)}
                   className={`w-full text-left p-3.5 sm:p-4 rounded-xl border flex items-start gap-3.5 transition-all text-sm sm:text-[15px] leading-relaxed cursor-pointer disabled:cursor-default ${buttonStyle}`}
                 >
@@ -244,7 +247,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     key={opt.id}
                     onClick={() => handleToggleMulti(opt.id)}
                     className={`p-3.5 sm:p-4 rounded-xl border flex items-start gap-3.5 transition-all text-sm sm:text-[15px] leading-relaxed select-none ${
-                      attempt ? 'cursor-default' : 'cursor-pointer'
+                      attempt || disabled ? 'cursor-default' : 'cursor-pointer'
                     } ${cardStyle}`}
                   >
                     <div
@@ -304,7 +307,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                   ref={textInputRef}
                   id="blank-input"
                   type="text"
-                  disabled={Boolean(attempt)}
+                disabled={Boolean(attempt) || disabled}
                   value={fillBlankInput}
                   onChange={(e) => setFillBlankInput(e.target.value)}
                   placeholder="e.g. index, code pushes, Zig..."
