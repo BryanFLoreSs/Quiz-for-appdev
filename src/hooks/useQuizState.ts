@@ -184,6 +184,18 @@ export function useQuizState(quizId: string, questions: Question[]) {
     });
   }, [questions]);
 
+  const restoreProgress = useCallback((nextProgress: QuizProgress) => {
+    const safeQuestionId = questions.some((question) => question.id === nextProgress.currentQuestionId)
+      ? nextProgress.currentQuestionId
+      : 1;
+    setProgress({
+      attempts: nextProgress.attempts ?? {},
+      bookmarks: (nextProgress.bookmarks ?? []).filter((id) => questions.some((question) => question.id === id)),
+      currentQuestionId: safeQuestionId,
+      optionOrder: nextProgress.optionOrder ?? {},
+    });
+  }, [questions]);
+
   const stats = useMemo(() => {
     const total = questions.length;
     const attemptedKeys = Object.keys(progress.attempts);
@@ -223,6 +235,7 @@ export function useQuizState(quizId: string, questions: Question[]) {
     toggleBookmark,
     submitAnswer,
     resetAllProgress,
+    restoreProgress,
     stats,
     progress,
   };

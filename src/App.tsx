@@ -105,7 +105,7 @@ function QuizLibrary({ userEmail, lastQuizId, isDarkMode, onToggleTheme, onSelec
 }
 
 function QuizScreen({ quiz, isDarkMode, onToggleTheme, onHome }: { quiz: typeof QUIZZES[number]; isDarkMode: boolean; onToggleTheme: () => void; onHome: () => void }) {
-  const { currentQuestion, currentAttempt, isBookmarked, goToQuestion, nextQuestion, prevQuestion, toggleBookmark, submitAnswer, resetAllProgress, stats, progress } = useQuizState(quiz.id, quiz.questions);
+  const { currentQuestion, currentAttempt, isBookmarked, goToQuestion, nextQuestion, prevQuestion, toggleBookmark, submitAnswer, resetAllProgress, restoreProgress, stats, progress } = useQuizState(quiz.id, quiz.questions);
   const [isGridOpen, setIsGridOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isWorksheetOpen, setIsWorksheetOpen] = useState(false);
@@ -116,7 +116,7 @@ function QuizScreen({ quiz, isDarkMode, onToggleTheme, onHome }: { quiz: typeof 
     </main>
     <footer className="w-full border-t border-slate-200 dark:border-slate-800/80 py-4 text-center text-xs text-slate-400 dark:text-slate-500"><div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2"><span>{quiz.title} ({quiz.questions.length} Questions)</span><span className="font-mono tabular-nums text-[11px]">{stats.attemptedCount} of {stats.total} completed ({stats.completionRate}%)</span></div></footer>
     <QuestionGridModal isOpen={isGridOpen} onClose={() => setIsGridOpen(false)} currentQuestionId={currentQuestion.id} attempts={progress.attempts} bookmarks={progress.bookmarks} onSelectQuestion={goToQuestion} questions={quiz.questions} />
-    <SummaryModal isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} progress={progress} onReset={resetAllProgress} onJumpToQuestion={goToQuestion} questions={quiz.questions} quizId={quiz.id} />
+    <SummaryModal isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} progress={progress} onReset={resetAllProgress} onImportProgress={restoreProgress} onJumpToQuestion={goToQuestion} questions={quiz.questions} quizId={quiz.id} />
     {quiz.id === 'sdlc' && <WorksheetViewModal isOpen={isWorksheetOpen} onClose={() => setIsWorksheetOpen(false)} onJumpToQuestion={goToQuestion} />}
   </div>;
 }

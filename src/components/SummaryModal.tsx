@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Award, Download, RotateCcw, CheckCircle2, XCircle, AlertTriangle, ArrowRight } from 'lucide-react';
+import { X, Award, Download, Upload, RotateCcw, CheckCircle2, XCircle, AlertTriangle, ArrowRight } from 'lucide-react';
 import { Question, QuestionTopic } from '../types/quiz.ts';
 import { QuizProgress } from '../types/quiz.ts';
 
@@ -11,6 +11,7 @@ interface SummaryModalProps {
   onJumpToQuestion: (id: number) => void;
   questions?: Question[];
   quizId?: string;
+  onImportProgress: (progress: QuizProgress) => void;
 }
 
 export const SummaryModal: React.FC<SummaryModalProps> = ({
@@ -21,6 +22,7 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
   onJumpToQuestion,
   questions = [],
   quizId = 'quiz',
+  onImportProgress,
 }) => {
   const [showConfirmReset, setShowConfirmReset] = useState(false);
 
@@ -63,6 +65,23 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
     link.download = `${quizId}-progress-${new Date().toISOString().slice(0, 10)}.json`;
     link.click();
     URL.revokeObjectURL(url);
+  };
+
+  const importProgress = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    try {
+      const parsed = JSON.parse(await file.text());
+      const restored = parsed?.progress;
+      if (parsed?.app !== 'Study Library' || parsed?.quizId !== quizId || !restored || typeof restored !== 'object') {
+        throw new Error('Invalid progress backup');
+      }
+      if (!restored.attempts || !Array.isArray(restored.bookmarks)) throw new Error('Invalid progress backup');
+      onImportProgress(restored as QuizProgress);
+    } catch {
+      window.alert('That file is not a valid backup for this quiz.');
+    }
   };
 
   // Topic breakdown
@@ -169,13 +188,10 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={exportProgress}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
-          >
-            <Download className="w-3.5 h-3.5" />
-            Export progress backup
-          </button>
+          <div className="flex flex-wrap items-center gap-4">
+            <button onClick={exportProgress} className="inline-flex items-center gap-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"><Download className="w-3.5 h-3.5" />Export progress backup</button>
+            <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:underline cursor-pointer"><Upload className="w-3.5 h-3.5" />Import backup<input type="file" accept="application/json,.json" onChange={importProgress} className="sr-only" /></label>
+          </div>
 
           {/* Quick Review Incorrect CTA */}
           {incorrectIds.length > 0 && (
