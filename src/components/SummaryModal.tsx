@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Award, RotateCcw, CheckCircle2, XCircle, AlertTriangle, ArrowRight } from 'lucide-react';
+import { X, Award, Download, RotateCcw, CheckCircle2, XCircle, AlertTriangle, ArrowRight } from 'lucide-react';
 import { Question, QuestionTopic } from '../types/quiz.ts';
 import { QuizProgress } from '../types/quiz.ts';
 
@@ -10,6 +10,7 @@ interface SummaryModalProps {
   onReset: () => void;
   onJumpToQuestion: (id: number) => void;
   questions?: Question[];
+  quizId?: string;
 }
 
 export const SummaryModal: React.FC<SummaryModalProps> = ({
@@ -19,6 +20,7 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
   onReset,
   onJumpToQuestion,
   questions = [],
+  quizId = 'quiz',
 }) => {
   const [showConfirmReset, setShowConfirmReset] = useState(false);
 
@@ -46,6 +48,22 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
 
   const accuracy = attemptedCount > 0 ? Math.round((correctCount / attemptedCount) * 100) : 0;
   const completionRate = Math.round((attemptedCount / total) * 100);
+
+  const exportProgress = () => {
+    const payload = {
+      app: 'Study Library',
+      quizId,
+      exportedAt: new Date().toISOString(),
+      progress,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${quizId}-progress-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   // Topic breakdown
   const topicStats = [...new Set(questions.map((q) => q.topic))].map((topic: QuestionTopic) => {
@@ -150,6 +168,14 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
               </div>
             </div>
           </div>
+
+          <button
+            onClick={exportProgress}
+            className="inline-flex items-center gap-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Export progress backup
+          </button>
 
           {/* Quick Review Incorrect CTA */}
           {incorrectIds.length > 0 && (
