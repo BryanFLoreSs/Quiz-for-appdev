@@ -18,6 +18,7 @@ const QUIZZES = [
 
 export default function App() {
   const [activeQuizId, setActiveQuizId] = useState<string | null>(null);
+  const [lastQuizId, setLastQuizId] = useState(() => localStorage.getItem('study_library_last_quiz') ?? '');
   const [userEmail, setUserEmail] = useState(() => localStorage.getItem('study_library_user') ?? '');
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('sdlc_quiz_theme') === 'dark');
   useEffect(() => {
@@ -34,8 +35,13 @@ export default function App() {
     setActiveQuizId(null);
     setUserEmail('');
   };
+  const selectQuiz = (quizId: string) => {
+    localStorage.setItem('study_library_last_quiz', quizId);
+    setLastQuizId(quizId);
+    setActiveQuizId(quizId);
+  };
   if (!userEmail) return <LoginScreen isDarkMode={isDarkMode} onToggleTheme={toggleTheme} onLogin={handleLogin} />;
-  if (!activeQuizId) return <QuizLibrary userEmail={userEmail} isDarkMode={isDarkMode} onToggleTheme={toggleTheme} onSelect={setActiveQuizId} onLogout={handleLogout} />;
+  if (!activeQuizId) return <QuizLibrary userEmail={userEmail} lastQuizId={lastQuizId} isDarkMode={isDarkMode} onToggleTheme={toggleTheme} onSelect={selectQuiz} onLogout={handleLogout} />;
   const quiz = QUIZZES.find((item) => item.id === activeQuizId) ?? QUIZZES[0];
   return <QuizScreen key={quiz.id} quiz={quiz} isDarkMode={isDarkMode} onToggleTheme={toggleTheme} onHome={() => setActiveQuizId(null)} />;
 }
@@ -73,7 +79,7 @@ function LoginScreen({ isDarkMode, onToggleTheme, onLogin }: { isDarkMode: boole
   </div>;
 }
 
-function QuizLibrary({ userEmail, isDarkMode, onToggleTheme, onSelect, onLogout }: { userEmail: string; isDarkMode: boolean; onToggleTheme: () => void; onSelect: (id: string) => void; onLogout: () => void }) {
+function QuizLibrary({ userEmail, lastQuizId, isDarkMode, onToggleTheme, onSelect, onLogout }: { userEmail: string; lastQuizId: string; isDarkMode: boolean; onToggleTheme: () => void; onSelect: (id: string) => void; onLogout: () => void }) {
   const progressFor = (quizId: string) => {
     try {
       const saved = localStorage.getItem(`quiz_state_v2_${quizId}`);
@@ -86,10 +92,13 @@ function QuizLibrary({ userEmail, isDarkMode, onToggleTheme, onSelect, onLogout 
       return { attempted: 0, accuracy: 0 };
     }
   };
+  const lastQuiz = QUIZZES.find((quiz) => quiz.id === lastQuizId);
+  const lastProgress = lastQuiz ? progressFor(lastQuiz.id) : { attempted: 0, accuracy: 0 };
 
   return <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased">
     <header className="border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90"><div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between gap-4"><span className="font-bold tracking-tight">Study Library</span><div className="flex items-center gap-2"><span className="hidden sm:inline text-sm text-slate-500 dark:text-slate-400">{userEmail}</span><button onClick={onToggleTheme} className="text-sm px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">{isDarkMode ? 'Light mode' : 'Dark mode'}</button><button onClick={onLogout} className="inline-flex items-center gap-1.5 text-sm px-3 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Sign out"><LogOut className="w-4 h-4" /><span className="hidden sm:inline">Sign out</span></button></div></div></header>
     <main className="max-w-6xl mx-auto px-5 py-14 sm:py-20"><p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase">Your quizzes</p><h1 className="mt-3 text-4xl sm:text-5xl font-bold tracking-tight">Choose what to study.</h1><p className="mt-4 text-slate-600 dark:text-slate-400 max-w-xl">Pick up where you left off. Answers and bookmarks are saved separately for each quiz.</p>
+      {lastQuiz && lastProgress.attempted > 0 && <button onClick={() => onSelect(lastQuiz.id)} className="mt-8 w-full max-w-2xl text-left rounded-2xl border border-indigo-200 dark:border-indigo-900/70 bg-indigo-50/70 dark:bg-indigo-950/30 p-5 hover:border-indigo-400 dark:hover:border-indigo-600 transition-colors"><span className="text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">Continue where you left off</span><span className="mt-2 flex items-center justify-between gap-4"><span><span className="block font-bold text-slate-900 dark:text-slate-100">{lastQuiz.shortTitle}</span><span className="mt-1 block text-sm text-slate-600 dark:text-slate-400">Question progress saved · {lastProgress.attempted} answered · {lastProgress.accuracy}% accuracy</span></span><ArrowRight className="w-5 h-5 shrink-0 text-indigo-600 dark:text-indigo-400" /></span></button>}
       <div className="grid sm:grid-cols-2 gap-5 mt-10">{QUIZZES.map((quiz, index) => { const Icon = index === 0 ? BookOpen : ShieldCheck; const progress = progressFor(quiz.id); const completion = Math.min(100, Math.round((progress.attempted / quiz.questions.length) * 100)); return <button key={quiz.id} onClick={() => onSelect(quiz.id)} className="group text-left p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-lg transition-all"><div className="flex items-start justify-between"><span className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 grid place-items-center"><Icon className="w-6 h-6" /></span><span className="text-xs font-medium text-slate-500">{quiz.questions.length} questions</span></div><h2 className="mt-7 text-xl font-bold">{quiz.shortTitle}</h2><p className="mt-2 text-sm font-medium text-slate-700 dark:text-slate-300">{quiz.title}</p><p className="mt-3 text-sm leading-6 text-slate-500 dark:text-slate-400">{quiz.description}</p><div className="mt-6 flex items-center gap-3 text-xs font-medium text-slate-500 dark:text-slate-400"><span>{progress.attempted ? `${progress.attempted} answered` : 'Not started'}</span>{progress.attempted > 0 && <><span aria-hidden="true">·</span><span>{progress.accuracy}% accuracy</span><span aria-hidden="true">·</span><span>{completion}% complete</span></>}</div><div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800" role="progressbar" aria-label={`${quiz.shortTitle} completion`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={completion}><div className="h-full rounded-full bg-indigo-600 dark:bg-indigo-500 transition-all" style={{ width: `${completion}%` }} /></div><span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400">Open quiz <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></span></button>; })}</div>
     </main>
   </div>;
