@@ -47,4 +47,5 @@ export interface QuizProgress {
   bookmarks: number[];
   currentQuestionId: number;
   optionOrder?: Record<number, string[]>;
+  notes?: Record<number, string>;
 }

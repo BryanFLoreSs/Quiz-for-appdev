@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bookmark, BookmarkCheck, ChevronLeft, ChevronRight, Check, X, ArrowRight, CornerDownLeft, Sparkles } from 'lucide-react';
+import { Bookmark, BookmarkCheck, ChevronLeft, ChevronRight, Check, X, ArrowRight, CornerDownLeft, Edit3, Sparkles } from 'lucide-react';
 import { Question, QuestionAttempt } from '../types/quiz.ts';
 import { ExplanationBox } from './ExplanationBox.tsx';
 
@@ -12,6 +12,8 @@ interface QuestionCardProps {
   onNext: () => void;
   onPrev: () => void;
   totalQuestions: number;
+  note?: string;
+  onSaveNote: (note: string) => void;
 }
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -23,6 +25,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   onNext,
   onPrev,
   totalQuestions,
+  note = '',
+  onSaveNote,
 }) => {
   // Local state for multiple choice selections before submitting
   const [selectedMulti, setSelectedMulti] = useState<string[]>([]);
@@ -340,6 +344,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       {attempt && (
         <ExplanationBox question={question} isCorrect={attempt.isCorrect} />
       )}
+
+      <div className="mt-6 rounded-xl border border-indigo-100 dark:border-indigo-900/50 bg-indigo-50/40 dark:bg-indigo-950/20 p-4">
+        <label htmlFor={`note-${question.id}`} className="flex items-center gap-1.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300"><Edit3 className="w-3.5 h-3.5" />Study note</label>
+        <textarea key={question.id} id={`note-${question.id}`} defaultValue={note} onBlur={(event) => onSaveNote(event.target.value)} rows={2} placeholder="Add a reminder or explanation for this question..." className="mt-2 w-full resize-y rounded-lg border border-indigo-100 dark:border-indigo-900/60 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 outline-none focus:ring-2 focus:ring-indigo-500/20" />
+      </div>
 
       {/* Card Footer Navigation */}
       <div className="flex items-center justify-between gap-4 mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">

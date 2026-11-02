@@ -44,6 +44,7 @@ export function useQuizState(quizId: string, questions: Question[]) {
           bookmarks: Array.isArray(parsed.bookmarks) ? parsed.bookmarks : [],
           currentQuestionId: typeof parsed.currentQuestionId === 'number' && parsed.currentQuestionId <= questions.length ? parsed.currentQuestionId : 1,
           optionOrder: parsed.optionOrder && typeof parsed.optionOrder === 'object' ? parsed.optionOrder : {},
+          notes: parsed.notes && typeof parsed.notes === 'object' ? parsed.notes : {},
         };
       }
     } catch {
@@ -53,6 +54,7 @@ export function useQuizState(quizId: string, questions: Question[]) {
       attempts: {},
       bookmarks: [],
       currentQuestionId: 1,
+      notes: {},
     };
   });
 
@@ -193,8 +195,18 @@ export function useQuizState(quizId: string, questions: Question[]) {
       bookmarks: (nextProgress.bookmarks ?? []).filter((id) => questions.some((question) => question.id === id)),
       currentQuestionId: safeQuestionId,
       optionOrder: nextProgress.optionOrder ?? {},
+      notes: nextProgress.notes ?? {},
     });
   }, [questions]);
+
+  const updateNote = useCallback((questionId: number, note: string) => {
+    setProgress((prev) => {
+      const notes = { ...(prev.notes ?? {}) };
+      if (note.trim()) notes[questionId] = note;
+      else delete notes[questionId];
+      return { ...prev, notes };
+    });
+  }, []);
 
   const stats = useMemo(() => {
     const total = questions.length;
@@ -236,6 +248,7 @@ export function useQuizState(quizId: string, questions: Question[]) {
     submitAnswer,
     resetAllProgress,
     restoreProgress,
+    updateNote,
     stats,
     progress,
   };
