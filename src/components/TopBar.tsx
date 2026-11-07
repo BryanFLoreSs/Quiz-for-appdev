@@ -14,6 +14,7 @@ interface TopBarProps {
   onOpenGrid: () => void;
   onOpenStats: () => void;
   onOpenWorksheet: () => void;
+  showWorksheet: boolean;
   onReset: () => void;
 }
 
@@ -30,6 +31,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenGrid,
   onOpenStats,
   onOpenWorksheet,
+  showWorksheet,
   onReset,
 }) => {
   return (
@@ -86,16 +88,18 @@ export const TopBar: React.FC<TopBarProps> = ({
             <span className="hidden sm:inline text-slate-400 font-mono text-[11px] tabular-nums">({totalQuestions})</span>
           </button>
 
-          {/* Worksheet full view */}
-          <button
-            onClick={onOpenWorksheet}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors cursor-pointer"
-            title="View Complete PDF Worksheet"
-            aria-label="View Complete PDF Worksheet"
-          >
-            <FileText className="w-3.5 h-3.5 text-slate-500" />
-            <span>Sheet View</span>
-          </button>
+          {/* Worksheet full view (available for quizzes with a worksheet) */}
+          {showWorksheet && (
+            <button
+              onClick={onOpenWorksheet}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+              title="View Complete PDF Worksheet"
+              aria-label="View Complete PDF Worksheet"
+            >
+              <FileText className="w-3.5 h-3.5 text-slate-500" />
+              <span>Sheet View</span>
+            </button>
+          )}
 
           {/* Stats Dialog Trigger */}
           <button
