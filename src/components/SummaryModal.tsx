@@ -58,6 +58,14 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
     },
     { low: 0, medium: 0, high: 0 }
   );
+  const lowConfidenceCorrect = attemptedKeys.filter((key) => {
+    const attempt = attempts[Number(key)];
+    return attempt?.confidence === 'low' && attempt.isCorrect;
+  }).length;
+  const highConfidenceIncorrect = attemptedKeys.filter((key) => {
+    const attempt = attempts[Number(key)];
+    return attempt?.confidence === 'high' && !attempt.isCorrect;
+  }).length;
 
   const exportProgress = () => {
     const payload = {
@@ -208,6 +216,7 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
               <div className="rounded-lg bg-amber-50 dark:bg-amber-950/30 px-2 py-2"><div className="font-bold text-amber-700 dark:text-amber-300">{confidenceCounts.medium}</div><div className="mt-0.5 text-amber-600/80 dark:text-amber-400">Medium</div></div>
               <div className="rounded-lg bg-emerald-50 dark:bg-emerald-950/30 px-2 py-2"><div className="font-bold text-emerald-700 dark:text-emerald-300">{confidenceCounts.high}</div><div className="mt-0.5 text-emerald-600/80 dark:text-emerald-400">High</div></div>
             </div>
+            {attemptedCount > 0 && <p className="mt-3 text-[11px] leading-5 text-slate-500 dark:text-slate-400">Calibration: <span className="font-semibold text-emerald-600 dark:text-emerald-400">{lowConfidenceCorrect} low-confidence correct</span> · <span className="font-semibold text-rose-600 dark:text-rose-400">{highConfidenceIncorrect} high-confidence missed</span></p>}
           </div>
 
           {/* Quick Review Incorrect CTA */}
