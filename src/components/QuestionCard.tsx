@@ -56,11 +56,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (disabled) return;
-      // Don't trigger if user is typing in the input box
-      if (document.activeElement === textInputRef.current) {
+      // Don't trigger quiz shortcuts while editing any form control.
+      const activeElement = document.activeElement;
+      if (activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement || activeElement instanceof HTMLSelectElement) {
         if (e.key === 'Enter' && !attempt) {
-          e.preventDefault();
-          if (fillBlankInput.trim()) {
+          if (activeElement === textInputRef.current && fillBlankInput.trim()) {
+            e.preventDefault();
             onSubmitAnswer(fillBlankInput.trim(), confidence);
           }
         }
@@ -117,7 +118,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs transition-colors p-6 sm:p-8">
+    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs transition-colors p-6 sm:p-8" aria-labelledby={`question-${question.id}`}>
       {/* Top Metadata Header with Zero-Pill rule */}
       <div className="flex items-center justify-between gap-4 pb-4 mb-5 border-b border-slate-100 dark:border-slate-800">
         <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
@@ -138,7 +139,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
         {/* Bookmark toggle */}
         <button
+          type="button"
           onClick={onToggleBookmark}
+          aria-pressed={isBookmarked}
+          aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark question'}
           className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg transition-colors cursor-pointer ${
             isBookmarked
               ? 'text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40'
@@ -161,12 +165,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       </div>
 
       {/* Exact Verbatim Question Text */}
-      <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-slate-100 leading-relaxed mb-6">
+      <h2 id={`question-${question.id}`} className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-slate-100 leading-relaxed mb-6">
         {question.question}
       </h2>
 
       {/* Response Section */}
-      {!attempt && <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400"><span className="font-medium">Confidence:</span>{(['low', 'medium', 'high'] as const).map((level) => <button key={level} type="button" onClick={() => setConfidence(level)} className={`rounded-lg px-2.5 py-1 capitalize transition-colors ${confidence === level ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700'}`}>{level}</button>)}</div>}
+      {!attempt && <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400" role="group" aria-label="Answer confidence"><span className="font-medium">Confidence:</span>{(['low', 'medium', 'high'] as const).map((level) => <button key={level} type="button" aria-pressed={confidence === level} onClick={() => setConfidence(level)} className={`rounded-lg px-2.5 py-1 capitalize transition-colors ${confidence === level ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700'}`}>{level}</button>)}</div>}
       <div className="space-y-3">
         {/* Single Choice Mode */}
         {question.type === 'single' && question.options && (
@@ -197,8 +201,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
               return (
                 <button
                   key={opt.id}
+                  type="button"
                   disabled={Boolean(attempt) || disabled}
                   onClick={() => onSubmitAnswer(opt.id, confidence)}
+                  aria-label={`Option ${opt.id}: ${opt.text}`}
                   className={`w-full text-left p-3.5 sm:p-4 rounded-xl border flex items-start gap-3.5 transition-all text-sm sm:text-[15px] leading-relaxed cursor-pointer disabled:cursor-default ${buttonStyle}`}
                 >
                   <span
@@ -249,6 +255,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                   <div
                     key={opt.id}
                     onClick={() => handleToggleMulti(opt.id)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        handleToggleMulti(opt.id);
+                      }
+                    }}
+                    role="checkbox"
+                    aria-checked={isChecked}
+                    tabIndex={attempt || disabled ? -1 : 0}
                     className={`p-3.5 sm:p-4 rounded-xl border flex items-start gap-3.5 transition-all text-sm sm:text-[15px] leading-relaxed select-none ${
                       attempt || disabled ? 'cursor-default' : 'cursor-pointer'
                     } ${cardStyle}`}
@@ -283,6 +298,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                   {selectedMulti.length} selected
                 </span>
                 <button
+                  type="button"
                   onClick={handleMultiSubmit}
                   disabled={selectedMulti.length === 0}
                   className="px-5 py-2.5 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer flex items-center gap-1.5"
@@ -319,6 +335,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 />
                 {!attempt && (
                   <button
+                    type="button"
                     onClick={handleFillBlankSubmit}
                     disabled={!fillBlankInput.trim()}
                     className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
@@ -334,6 +351,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
               <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                 <span>Press Enter to check your answer</span>
                 <button
+                  type="button"
                   onClick={handleRevealAnswer}
                   className="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
                 >
@@ -359,6 +377,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       {/* Card Footer Navigation */}
       <div className="flex items-center justify-between gap-4 mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
         <button
+          type="button"
           onClick={onPrev}
           className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
         >
@@ -371,6 +390,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         </span>
 
         <button
+          type="button"
           onClick={onNext}
           className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-slate-900 dark:bg-slate-100 dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
         >
